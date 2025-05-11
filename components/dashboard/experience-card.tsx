@@ -1,3 +1,4 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
@@ -60,8 +61,38 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             <MessageSquare className="h-4 w-4" />
             <span>{experience.comments ?? 0}</span>
           </Button>
-          <Button variant="ghost" size="sm" className="h-8">
-            <Share2 className="h-4 w-4" />
+          {/* Share Button */}
+          <Button variant="outline" size="sm" className="h-8" onClick={() => {
+            try {
+              const feed = JSON.parse(localStorage.getItem("mockFeed") || "[]");
+              if (!feed.find((item: any) => item.id === experience.id)) {
+                localStorage.setItem("mockFeed", JSON.stringify([...feed, experience]));
+                window.alert("Shared to feed!");
+              } else {
+                window.alert("Already in feed.");
+              }
+            } catch (e) { window.alert("Error sharing experience."); }
+          }}>
+            Share
+          </Button>
+          {/* Edit Button */}
+          <Button variant="outline" size="sm" className="h-8" onClick={() => {
+            window.location.href = `/dashboard/experiences/edit/${experience.id}`;
+          }}>
+            Edit
+          </Button>
+          {/* Delete Button */}
+          <Button variant="destructive" size="sm" className="h-8" onClick={() => {
+            if (window.confirm("Are you sure you want to delete this experience?")) {
+              try {
+                const all = JSON.parse(localStorage.getItem("mockExperiences") || "[]");
+                const filtered = all.filter((exp: any) => exp.id !== experience.id);
+                localStorage.setItem("mockExperiences", JSON.stringify(filtered));
+                window.location.reload();
+              } catch (e) { window.alert("Error deleting experience."); }
+            }
+          }}>
+            Delete
           </Button>
         </div>
       </CardFooter>

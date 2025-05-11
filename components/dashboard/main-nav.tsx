@@ -10,7 +10,7 @@ export function MainNav() {
   return (
     <div className="mr-4 flex">
       <Link href="/dashboard" className="mr-6 flex items-center space-x-2">
-        <span className="hidden font-bold sm:inline-block">Tech Adoption Platform</span>
+        <span className="hidden font-bold sm:inline-block">Hack The Future</span>
       </Link>
       <nav className="flex items-center space-x-6 text-sm font-medium">
         <Link

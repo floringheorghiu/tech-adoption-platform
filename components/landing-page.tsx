@@ -5,9 +5,9 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-40 border-b bg-background">
-        <div className="container flex h-16 items-center justify-between py-4">
+        <div className="container flex h-16 items-center justify-between py-4 px-4 md:px-8">
           <div className="flex items-center gap-2">
-            <span className="text-xl font-bold">Tech Adoption Platform</span>
+            <span className="text-xl font-bold">Hack The Future</span>
           </div>
           <nav className="flex items-center gap-4">
             <Link href="/api/auth/signin">
@@ -55,9 +55,9 @@ export default function LandingPage() {
         </section>
       </main>
       <footer className="border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row px-4 md:px-8">
           <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 Tech Adoption Platform. All rights reserved.
+            © 2025 Hack The Future. All rights reserved.
           </p>
         </div>
       </footer>
