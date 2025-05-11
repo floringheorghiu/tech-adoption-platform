@@ -8,6 +8,7 @@ export default function ExperienceViewPage() {
   const params = useParams();
   const { id } = params as { id: string };
   const [experience, setExperience] = useState<any>(null);
+  const [creatorName, setCreatorName] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,8 +21,26 @@ export default function ExperienceViewPage() {
         found = all.find((exp: any) => exp.id === id);
       }
       setExperience(found);
+      // Try to get creator profile from localStorage
+      if (found) {
+        let profileKey = null;
+        if (found.userId) profileKey = `mockUserProfile:${found.userId}`;
+        else if (found.userEmail) profileKey = `mockUserProfile:${found.userEmail}`;
+        if (profileKey) {
+          try {
+            const prof = JSON.parse(localStorage.getItem(profileKey) || "null");
+            if (prof && prof.name) setCreatorName(prof.name);
+            else setCreatorName(found.userName || found.userEmail || found.userId || "User");
+          } catch {
+            setCreatorName(found.userName || found.userEmail || found.userId || "User");
+          }
+        } else {
+          setCreatorName(found.userName || found.userEmail || found.userId || "User");
+        }
+      }
     } catch {
       setExperience(null);
+      setCreatorName("");
     }
     setLoading(false);
   }, [id]);
@@ -42,7 +61,7 @@ export default function ExperienceViewPage() {
           <CardTitle>{experience.title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mb-2 text-muted-foreground">By: {experience.userName || experience.userId}</div>
+          <div className="mb-2 text-muted-foreground">By: {creatorName}</div>
           <div className="mb-2">{experience.description}</div>
           <div className="flex flex-wrap gap-2 pt-2">
             {(Array.isArray(experience.tags)

@@ -21,6 +21,20 @@ interface UserAccountNavProps {
 }
 
 export function UserAccountNav({ user }: UserAccountNavProps) {
+  // theme state is not needed, just read from localStorage and DOM
+  function getTheme() {
+    if (typeof window === "undefined") return "dark";
+    return localStorage.getItem("theme") || (document.documentElement.classList.contains("dark") ? "dark" : "light");
+  }
+  function setTheme(theme: "light" | "dark") {
+    try {
+      localStorage.setItem("theme", theme);
+      document.documentElement.classList.remove("light", "dark");
+      document.documentElement.classList.add(theme);
+    } catch (e) { console.log("Theme switch error", e); }
+  }
+  const theme = typeof window !== "undefined" ? getTheme() : "dark";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -45,6 +59,19 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
+          className="cursor-pointer flex items-center justify-between"
+          onClick={() => {
+            const newTheme = getTheme() === "dark" ? "light" : "dark";
+            setTheme(newTheme as "light" | "dark");
+          }}
+        >
+          <span>Theme</span>
+          <span className="ml-2 text-xs px-2 py-1 rounded bg-muted">
+            {typeof window !== "undefined" ? (getTheme() === "dark" ? "☀️ Light" : "🌙 Dark") : "🌙 Dark"}
+          </span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
           className="cursor-pointer"
           onSelect={(event) => {
             event.preventDefault()
@@ -59,3 +86,4 @@ export function UserAccountNav({ user }: UserAccountNavProps) {
     </DropdownMenu>
   )
 }
+
