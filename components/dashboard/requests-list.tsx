@@ -5,10 +5,11 @@ import { formatDate } from "@/lib/utils"
 import type { RequestWithUser } from "@/lib/types"
 
 interface RequestsListProps {
-  requests: RequestWithUser[]
+  requests: any[]
+  isAdmin?: boolean
 }
 
-export function RequestsList({ requests }: RequestsListProps) {
+export function RequestsList({ requests, isAdmin }: RequestsListProps) {
   return (
     <Card>
       <CardHeader>
@@ -26,7 +27,7 @@ export function RequestsList({ requests }: RequestsListProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requests.map((request) => (
+              {requests.map((request, idx) => (
                 <TableRow key={request.id}>
                   <TableCell className="font-medium">{request.toolName}</TableCell>
                   <TableCell>${request.amount.toFixed(2)}</TableCell>
@@ -34,7 +35,7 @@ export function RequestsList({ requests }: RequestsListProps) {
                     <Badge
                       variant={
                         request.status === "APPROVED"
-                          ? "success"
+                          ? "default"
                           : request.status === "REJECTED"
                             ? "destructive"
                             : "outline"
@@ -42,6 +43,21 @@ export function RequestsList({ requests }: RequestsListProps) {
                     >
                       {request.status}
                     </Badge>
+                    {isAdmin && request.status !== "APPROVED" && (
+                      <button
+                        style={{ marginLeft: 8 }}
+                        className="ml-2 px-2 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
+                        onClick={() => {
+                          // Approve in localStorage
+                          const mockRequests = JSON.parse(localStorage.getItem("mockRequests") || "[]");
+                          mockRequests[idx].status = "APPROVED";
+                          localStorage.setItem("mockRequests", JSON.stringify(mockRequests));
+                          window.location.reload();
+                        }}
+                      >
+                        Approve
+                      </button>
+                    )}
                   </TableCell>
                   <TableCell>{formatDate(request.createdAt)}</TableCell>
                 </TableRow>

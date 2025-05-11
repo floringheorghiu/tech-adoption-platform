@@ -1,10 +1,15 @@
 "use client"
 
+"use client"
+
 import { useEffect, useState } from "react"
 import { RequestsList } from "@/components/dashboard/requests-list"
+import { useSession } from "next-auth/react"
 
 export default function RequestsListClientWrapper({ serverRequests }: { serverRequests: any[] }) {
   const [requests, setRequests] = useState(serverRequests || [])
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.email === "admin@example.com";
 
   useEffect(() => {
     console.log("[RequestsListClientWrapper] serverRequests:", serverRequests)
@@ -24,6 +29,7 @@ export default function RequestsListClientWrapper({ serverRequests }: { serverRe
     console.log("[RequestsListClientWrapper] Rendering requests:", requests)
   }, [requests])
 
-  return <RequestsList requests={requests} />
+  return <RequestsList requests={requests} isAdmin={isAdmin} />
 }
+
 
