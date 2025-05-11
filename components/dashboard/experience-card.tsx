@@ -37,7 +37,12 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             </div>
             <p className="text-sm text-muted-foreground line-clamp-3">{experience.description}</p>
             <div className="flex flex-wrap gap-2 pt-2">
-              {(experience.tags || []).map((tag: string) => (
+              {(Array.isArray(experience.tags)
+                ? experience.tags
+                : typeof experience.tags === "string" && experience.tags.length > 0
+                  ? experience.tags.split(",").map((t: string) => t.trim())
+                  : []
+              ).map((tag: string) => (
                 <span key={tag} className="rounded-full bg-primary/10 px-2 py-1 text-xs text-primary">
                   {tag}
                 </span>

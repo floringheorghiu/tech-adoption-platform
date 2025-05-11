@@ -41,25 +41,31 @@ type ExperienceFormValues = z.infer<typeof experienceFormSchema>
 interface NewExperienceFormProps {
   userId: string
   approvedRequests: ApprovedRequest[]
+  initialValues?: Partial<ExperienceFormValues>
+  onSubmitOverride?: (data: ExperienceFormValues) => void
 }
 
-export function NewExperienceForm({ userId, approvedRequests }: NewExperienceFormProps) {
+export function NewExperienceForm({ userId, approvedRequests, initialValues, onSubmitOverride }: NewExperienceFormProps) {
   const router = useRouter()
   const [mediaFile, setMediaFile] = useState<File | null>(null)
 
   const form = useForm<ExperienceFormValues>({
     resolver: zodResolver(experienceFormSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      requestId: "",
-      rating: 0,
-      feedback: "",
-      tags: "",
+      title: initialValues?.title || "",
+      description: initialValues?.description || "",
+      requestId: initialValues?.requestId || "",
+      rating: initialValues?.rating ?? 0,
+      feedback: initialValues?.feedback || "",
+      tags: Array.isArray(initialValues?.tags) ? (initialValues?.tags as string[]).join(", ") : (initialValues?.tags || ""),
     },
   })
 
   async function onSubmit(data: ExperienceFormValues) {
+    if (typeof onSubmitOverride === "function") {
+      onSubmitOverride(data);
+      return;
+    }
     try {
       // In a real app, you would upload the media file to a storage service
       // and get back a URL to store in the database
