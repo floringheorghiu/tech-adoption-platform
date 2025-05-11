@@ -1,0 +1,35 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String    @unique
+  password        String
+  totalBudget     Float     @default(1000)
+  allocatedBudget Float     @default(0)
+  remainingBudget Float     @default(1000)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  requests        Request[]
+}
+
+model Request {
+  id        String   @id @default(cuid())
+  title     String
+  description String
+  type      String   @default("TRIAL")
+  priority  String   @default("MEDIUM")
+  budget    Float
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
