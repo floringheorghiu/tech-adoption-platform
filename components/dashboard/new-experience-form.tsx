@@ -71,7 +71,9 @@ export function NewExperienceForm({ userId, approvedRequests }: NewExperienceFor
 
       const request = approvedRequests.find((r) => r.id === data.requestId)
 
-      await createExperience({
+      // Save to localStorage (mockExperiences)
+      const newExperience = {
+        id: Date.now().toString(),
         userId,
         title: data.title,
         description: data.description,
@@ -81,7 +83,10 @@ export function NewExperienceForm({ userId, approvedRequests }: NewExperienceFor
         feedback: data.feedback,
         tags: data.tags.split(",").map((tag) => tag.trim()),
         mediaUrl,
-      })
+        createdAt: new Date().toISOString(),
+      };
+      const existing = JSON.parse(localStorage.getItem("mockExperiences") || "[]");
+      localStorage.setItem("mockExperiences", JSON.stringify([...existing, newExperience]));
 
       toast({
         title: "Experience shared",
