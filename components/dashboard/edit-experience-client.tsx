@@ -53,6 +53,12 @@ export default function EditExperienceClient({ experienceId }: { experienceId: s
 
   return (
     <div className="max-w-2xl mx-auto p-4">
+      <button
+        className="mb-4 px-4 py-2 rounded bg-muted hover:bg-muted-foreground text-sm"
+        onClick={() => window.history.back()}
+      >
+        ← Back
+      </button>
       <h2 className="text-2xl font-bold mb-4">Edit Experience</h2>
       <NewExperienceForm
         userId={experience.userId}

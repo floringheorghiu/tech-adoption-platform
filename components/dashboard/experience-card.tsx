@@ -1,7 +1,7 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { formatDistanceToNow } from "date-fns"
 import { ThumbsUp, MessageSquare, Share2 } from "lucide-react"
 import Link from "next/link"
@@ -24,7 +24,18 @@ export function ExperienceCard({ experience, showActions = true }: ExperienceCar
           <div className="space-y-2">
             <div>
               <Link href={`/dashboard/experiences/${experience.id}`} className="font-semibold hover:underline">
-                {experience.title}
+                <CardTitle>
+                  {!showActions ? (
+                    <Link
+                      href={`/dashboard/experiences/view/${experience.id}`}
+                      className="text-primary underline hover:text-primary/80 transition-colors"
+                    >
+                      {experience.title}
+                    </Link>
+                  ) : (
+                    experience.title
+                  )}
+                </CardTitle>
               </Link>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <span>{experience.user?.name || "User"}</span>
