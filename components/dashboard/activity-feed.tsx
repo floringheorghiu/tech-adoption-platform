@@ -23,7 +23,7 @@ export function ActivityFeed() {
       <CardContent>
         <div className="space-y-8">
           {experiences.length > 0 ? (
-            experiences.map((experience: any) => <ExperienceCard key={experience.id} experience={experience} />)
+            experiences.map((experience: any) => <ExperienceCard key={experience.id} experience={experience} showActions={false} />)
           ) : (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <p className="text-sm text-muted-foreground">No experiences have been shared yet.</p>

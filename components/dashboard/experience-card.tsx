@@ -9,9 +9,10 @@ import type { ExperienceWithUser } from "@/lib/types"
 
 interface ExperienceCardProps {
   experience: ExperienceWithUser
+  showActions?: boolean
 }
 
-export function ExperienceCard({ experience }: ExperienceCardProps) {
+export function ExperienceCard({ experience, showActions = true }: ExperienceCardProps) {
   return (
     <Card>
       <CardContent className="p-6">
@@ -39,11 +40,11 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             <div className="flex flex-wrap gap-2 pt-2">
               {(Array.isArray(experience.tags)
                 ? experience.tags
-                : typeof experience.tags === "string" && experience.tags.length > 0
-                  ? experience.tags.split(",").map((t: string) => t.trim())
+                : typeof experience.tags === "string" && (experience.tags as string).trim().length > 0
+                  ? (experience.tags as string).split(",").map((t: string) => t.trim())
                   : []
-              ).map((tag: string) => (
-                <span key={tag} className="rounded-full bg-primary/10 px-2 py-1 text-xs text-primary">
+              ).map((tag: string, i: number) => (
+                <span key={tag + i} className="rounded-full bg-primary/10 px-2 py-1 text-xs text-primary">
                   {tag}
                 </span>
               ))}
@@ -66,39 +67,44 @@ export function ExperienceCard({ experience }: ExperienceCardProps) {
             <MessageSquare className="h-4 w-4" />
             <span>{experience.comments ?? 0}</span>
           </Button>
-          {/* Share Button */}
-          <Button variant="outline" size="sm" className="h-8" onClick={() => {
-            try {
-              const feed = JSON.parse(localStorage.getItem("mockFeed") || "[]");
-              if (!feed.find((item: any) => item.id === experience.id)) {
-                localStorage.setItem("mockFeed", JSON.stringify([...feed, experience]));
-                window.alert("Shared to feed!");
-              } else {
-                window.alert("Already in feed.");
-              }
-            } catch (e) { window.alert("Error sharing experience."); }
-          }}>
-            Share
-          </Button>
-          {/* Edit Button */}
-          <Button variant="outline" size="sm" className="h-8" onClick={() => {
-            window.location.href = `/dashboard/experiences/edit/${experience.id}`;
-          }}>
-            Edit
-          </Button>
-          {/* Delete Button */}
-          <Button variant="destructive" size="sm" className="h-8" onClick={() => {
-            if (window.confirm("Are you sure you want to delete this experience?")) {
-              try {
-                const all = JSON.parse(localStorage.getItem("mockExperiences") || "[]");
-                const filtered = all.filter((exp: any) => exp.id !== experience.id);
-                localStorage.setItem("mockExperiences", JSON.stringify(filtered));
-                window.location.reload();
-              } catch (e) { window.alert("Error deleting experience."); }
-            }
-          }}>
-            Delete
-          </Button>
+          {showActions && (
+            <>
+              <Button variant="outline" size="sm" className="h-8" onClick={() => {
+                try {
+                  const feed = JSON.parse(localStorage.getItem("mockFeed") || "[]");
+                  if (!feed.find((item: any) => item.id === experience.id)) {
+                    localStorage.setItem("mockFeed", JSON.stringify([...feed, experience]));
+                    window.alert("Shared to feed!");
+                  } else {
+                    window.alert("Already in feed.");
+                  }
+                } catch (e) { window.alert("Error sharing experience."); }
+              }}>
+                Share
+              </Button>
+              <Button variant="outline" size="sm" className="h-8" onClick={() => {
+                window.location.href = `/dashboard/experiences/edit/${experience.id}`;
+              }}>
+                Edit
+              </Button>
+              <Button variant="destructive" size="sm" className="h-8" onClick={() => {
+                if (window.confirm("Are you sure you want to delete this experience?")) {
+                  try {
+                    const all = JSON.parse(localStorage.getItem("mockExperiences") || "[]");
+                    const filtered = all.filter((exp: any) => exp.id !== experience.id);
+                    localStorage.setItem("mockExperiences", JSON.stringify(filtered));
+                    // Remove from feed if present
+                    const feed = JSON.parse(localStorage.getItem("mockFeed") || "[]");
+                    const newFeed = feed.filter((exp: any) => exp.id !== experience.id);
+                    localStorage.setItem("mockFeed", JSON.stringify(newFeed));
+                    window.location.reload();
+                  } catch (e) { window.alert("Error deleting experience."); }
+                }
+              }}>
+                Delete
+              </Button>
+            </>
+          )}
         </div>
       </CardFooter>
     </Card>

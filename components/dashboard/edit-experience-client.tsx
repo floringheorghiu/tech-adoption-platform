@@ -36,6 +36,13 @@ export default function EditExperienceClient({ experienceId }: { experienceId: s
       if (idx !== -1) {
         all[idx] = { ...all[idx], ...data };
         localStorage.setItem("mockExperiences", JSON.stringify(all));
+        // Update in mockFeed if present
+        const feed = JSON.parse(localStorage.getItem("mockFeed") || "[]");
+        const feedIdx = feed.findIndex((exp: any) => exp.id === experienceId);
+        if (feedIdx !== -1) {
+          feed[feedIdx] = { ...feed[feedIdx], ...data };
+          localStorage.setItem("mockFeed", JSON.stringify(feed));
+        }
         alert("Experience updated!");
         router.push("/dashboard/experiences");
       }
