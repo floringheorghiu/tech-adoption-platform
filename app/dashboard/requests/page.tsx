@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { authOptions } from "@/lib/auth"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { RequestsList } from "@/components/dashboard/requests-list"
+import RequestsListClientWrapper from "@/components/dashboard/requests-list-client-wrapper"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { getUserRequests } from "@/lib/data/requests"
@@ -24,7 +24,7 @@ export default async function RequestsPage() {
           <Button>New Request</Button>
         </Link>
       </DashboardHeader>
-      <RequestsList requests={requests} />
+      <RequestsListClientWrapper serverRequests={requests} />
     </DashboardShell>
   )
 }

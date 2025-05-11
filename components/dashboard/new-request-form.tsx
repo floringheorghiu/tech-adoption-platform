@@ -37,7 +37,6 @@ interface NewRequestFormProps {
   userId: string
   remainingBudget: number
 }
-
 export function NewRequestForm({ userId, remainingBudget }: NewRequestFormProps) {
   const router = useRouter()
   const form = useForm<RequestFormValues>({
@@ -59,32 +58,36 @@ export function NewRequestForm({ userId, remainingBudget }: NewRequestFormProps)
       })
       return
     }
-
+    // Always store request in localStorage (demo mode)
     try {
-      await createRequest({
+      const mockRequests = JSON.parse(localStorage.getItem("mockRequests") || "[]");
+      const newMock = {
+        id: Date.now().toString(),
         userId,
         toolName: data.toolName,
         amount: data.amount,
         justification: data.justification,
         goals: data.goals,
-      })
-
+        status: "PENDING",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      mockRequests.push(newMock);
+      localStorage.setItem("mockRequests", JSON.stringify(mockRequests));
       toast({
         title: "Request submitted",
-        description: "Your trial request has been submitted for approval.",
-      })
-
-      router.push("/dashboard/requests")
-      router.refresh()
-    } catch (error) {
+        description: "Your request has been stored locally.",
+      });
+      router.push("/dashboard/requests");
+      router.refresh();
+    } catch (storageError) {
       toast({
         title: "Something went wrong",
-        description: "Your request could not be submitted. Please try again.",
+        description: "Your request could not be stored locally.",
         variant: "destructive",
-      })
+      });
     }
   }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
