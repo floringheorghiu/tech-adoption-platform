@@ -87,9 +87,9 @@ export default function LoginPage() {
           </CardFooter>
         </form>
         <div className="p-4 text-center text-sm text-muted-foreground">
-          <p>Demo credentials:</p>
-          <p>Email: john@example.com or jane@example.com</p>
-          <p>Password: any value will work</p>
+          <p><b>Demo credentials</b></p>
+          <p>User: <i>test@example.com</i> and pass:  <i>test123</i></p>
+          <p>Admin: <i>admin@example.com</i> and pass: <i>adm123</i></p>
         </div>
       </Card>
     </div>
